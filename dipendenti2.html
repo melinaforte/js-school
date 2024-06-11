@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.onload = gestoreLoad;
+
+        function gestoreLoad() {
+            var btn = document.getElementById("btn");
+            btn.onclick = creaDipendente;
+            var btn1 = document.getElementById("btn1");
+            btn1.onclick = visualizzaDipendenti;
+            var btn2 = document.getElementById("btn2");
+            btn2.onclick = aggiornaStipendio;
+
+            class Dipendente {
+
+                constructor(cognome, mansione, stipendio, url) {
+                    this.cognome = cognome;
+                    this.mansione = mansione;
+                    this.stipendio = stipendio;
+                    this.url = url;
+                }
+
+                visualizza() {
+                    return "Cognome: " + this.cognome + ", Mansione: " + this.mansione + ", Stipendio: " + this.stipendio + " " + this.url;
+                }
+
+                bonus() {
+                    this.stipendio += 200;
+                }
+
+                setStipendio(nuovoStipendio) {
+                    this.stipendio = nuovoStipendio;
+                }
+            }
+
+            var listaDipendenti = new Array();
+            var d1 = new Dipendente("Rossi", "Operaio", 1200);
+            var d2 = new Dipendente("Verdi", "Developer", 2000);
+
+            listaDipendenti.push(d1);
+            listaDipendenti.push(d2);
+
+            for (var i = 0; i < listaDipendenti.length; i++) {
+                var select = document.getElementById("selectDipendente");
+                var nuovaOpzione = document.createElement("option");
+                nuovaOpzione.value = listaDipendenti[i].cognome;
+                nuovaOpzione.text = listaDipendenti[i].cognome;
+                select.appendChild(nuovaOpzione);
+            }
+
+
+            function remove() {
+                var nodo = document.getElementById("result");
+                while (nodo.firstChild) {
+                    nodo.removeChild(nodo.firstChild);
+                }
+            }
+
+            function remove1() {
+                var nodo = document.getElementById("result1");
+                while (nodo.firstChild) {
+                    nodo.removeChild(nodo.firstChild);
+                }
+            }
+
+            function creaDipendente() {
+                var cognome = document.getElementById("cognome").value;
+                var mansione = document.getElementById("mansione").value;
+                var stipendio = parseInt(document.getElementById("stipendio").value);
+                var url = document.getElementById("url").value;
+
+                var d1 = new Dipendente(cognome, mansione, stipendio, url);
+                listaDipendenti.push(d1);
+
+                var nodo = document.getElementById("result");
+                remove();
+                var nuovoNodo = document.createElement("p");
+                var nodoImmagine = document.createElement("img");
+                nodoImmagine.src = d1.url;
+                nuovoNodo.textContent = d1.visualizza();
+                nodo.appendChild(nuovoNodo);
+                nodo.appendChild(nodoImmagine);
+
+
+
+
+                var select = document.getElementById("selectDipendente");
+                var nuovaOpzione = document.createElement("option");
+                nuovaOpzione.value = cognome;
+                nuovaOpzione.text = cognome;
+                select.appendChild(nuovaOpzione);
+            }
+
+            function visualizzaDipendenti() {
+                remove1();
+                var nodo = document.getElementById("result1");
+                for (var i = 0; i < listaDipendenti.length; i++) {
+                    var nuovoNodo = document.createElement("p");
+                    nuovoNodo.textContent = listaDipendenti[i].visualizza();
+                    nodo.appendChild(nuovoNodo);
+                    var nodoImmagine = document.createElement("img");
+                    nodoImmagine.src = listaDipendenti[i].url;
+                    nodo.appendChild(nodoImmagine);
+                }
+            }
+
+            function aggiornaStipendio() {
+                var cognome = document.getElementById("selectDipendente").value;
+                var nuovoStipendio = parseInt(document.getElementById("stipendioAggiorna").value);
+                for (var i = 0; i < listaDipendenti.length; i++) {
+                    if (listaDipendenti[i].cognome === cognome) {
+                        listaDipendenti[i].setStipendio(nuovoStipendio);
+                        break;
+                    }
+                }
+                visualizzaDipendenti();
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h3>Dipendente</h3>
+    Inserisci il cognome del dipendente <input type="text" id="cognome"> <br><br>
+    Inserisci la sua mansione <input type="text" id="mansione"> <br><br>
+    Inserisci il suo stipendio <input type="text" id="stipendio"> <br><br>
+    Inserisci l'url della foto del dipendente <input type="text" id="url"> <br>
+    <button id="btn">Invia</button> <br><br>
+    <button id="btn1">Visualizza tutti i dipendenti</button>
+    <hr>
+    <div id="result"></div>
+    <hr>
+    <h3>Aggiorna Stipendio</h3>
+    Seleziona il cognome del dipendente
+    <select id="selectDipendente"></select> <br><br>
+    Inserisci il nuovo stipendio <input type="text" id="stipendioAggiorna"> <br><br>
+    <button id="btn2">Aggiorna Stipendio</button>
+    <hr>
+    <div id="result1"></div>
+</body>
+
+</html>
