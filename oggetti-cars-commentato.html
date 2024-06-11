@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oggetti cars</title>
+    <script>
+        window.onload = gestoreLoad;
+
+        function gestoreLoad() {
+
+            var btn = document.getElementById("btn");
+            btn.onclick = creaMacchina;
+            var btn1 = document.getElementById("btn1");
+            btn1.onclick = visualizzaMacchine;
+            var btn2 = document.getElementById("setYear");
+            btn2.onclick = setYear;
+
+
+            // creiamo una classe car che ha come proprietà
+            // un nome, un anno di immatricolazione, un url per visualizzare l'immagine
+
+            class Car {
+
+                constructor(name, year, url) {
+
+                    this.name = name;
+                    this.year = year;
+                    this.url = url;
+
+
+                }
+                // creo un metodo che deve ritornare la stampa con le proprietà dell'oggetto
+                visualizza() {
+
+                    return "Nome: " + this.name + " anno di immatricolazione: " + this.year;
+
+                }
+                // ritorna gli anni di vita della macchina
+                anni() {
+                    const d = new Date();
+                    let anno = d.getFullYear();
+                    return "La macchina ha: " + (anno - this.year) +
+                        " anni di vita";
+                }
+                // va a settare l'anno di immatricolazione dell'auto con un nuovo valore
+                setYear(year) {
+
+                    this.year = year;
+                }
+
+
+
+            }
+            function remove() {
+
+                var nodo = document.getElementById("result");
+
+                while (nodo.firstChild) {
+
+                    nodo.removeChild(nodo.firstChild);
+                }
+            }
+            function remove1() {
+
+                var nodo = document.getElementById("result1");
+
+                while (nodo.firstChild) {
+
+                    nodo.removeChild(nodo.firstChild);
+                }
+            }
+            // creiamo una variabile globale listamacchine e gli aggiungiamo due macchine
+            var listaMacchine = new Array();
+            var a1 = new Car("Volvo", 1960, "volvo.jpeg");
+            var a2 = new Car("Audi", 1970, "audi.jpeg");
+            listaMacchine.push(a1);
+            listaMacchine.push(a2);
+            creaSelect();
+
+            // creaselect crea in maniera dinamica una select con tutti i nomi delle auto
+            function creaSelect() {
+                //puliamo il nodo select con removeSelect
+                removeSelect();
+
+                var select = document.getElementById("cars");
+                // per ogni elemento all'interno di listamacchine creiamo un elemento option
+                // gli settiamo il valore con il nome della macchina e anche il testo con il nome della macchina
+                for (var i = 0; i < listaMacchine.length; i++) {
+                    var nuovoNodo = document.createElement("option");
+                    nuovoNodo.textContent = listaMacchine[i].name;
+                    nuovoNodo.value = listaMacchine[i].name;
+                    select.appendChild(nuovoNodo);
+
+                }
+            }
+            // una funzione che va a recuperare i valori ottenuti dall'input e crea una nuova macchina
+            function creaMacchina() {
+
+                var nome = document.getElementById("name").value;
+                var year = document.getElementById("year").value;
+                var anni = parseInt(year);
+                var url = document.getElementById("url").value;
+                // istanziamo un nuovo oggetto car con i valori ottenuti dall'input
+                var c1 = new Car(nome, anni, url);
+                // aggiungiamo la macchina alla lista listaMacchine
+                listaMacchine.push(c1);
+
+                // recuperiamo il nodo e lo puliamo con il metodo remove
+                var nodo = document.getElementById("result");
+                remove();
+                // creiamo tre nuovi elementi html 
+                var nuovoNodo = document.createElement("p");
+                var nuovoNodo1 = document.createElement("p");
+                var nodoImmagine = document.createElement("img");
+                // settiamo l'attributo src dell'immagine con il valore dell'oggetto della proprietà url
+                nodoImmagine.src = c1.url;
+                // stampiamo nei nuovi nodi paragrafo i metodi visualizza e anni 
+                // con appendchild andiamo ad aggiungere all'elemento genitore nodo tutti
+                // gli elementi appea creati
+                nuovoNodo.textContent = c1.visualizza(); // Imposta il testo del nuovo elemento
+                nodo.appendChild(nuovoNodo);
+                nuovoNodo1.textContent = c1.anni(); // Imposta il testo del nuovo elemento
+                nodo.appendChild(nuovoNodo1);
+                nodo.appendChild(nodoImmagine);
+                // invochiamo il metodo creaselect che va ad aggiungere la nuova auto
+                // alla select per dare la possibilità di settarle l'anno di immatricolazione
+                creaSelect();
+
+
+            }
+            // prima di tutto va a pulire il nodo principale chiamando il metodo remove1
+            // richiamo il nodo con id result1
+            // aggiunge dinamicamentre un piccolo titolo
+            function visualizzaMacchine() {
+
+                remove1();
+                var nodo = document.getElementById("result1");
+                var nuovoNodo = document.createElement("h3");
+                nuovoNodo.textContent = "La mia lista di macchine";
+                nodo.appendChild(nuovoNodo);
+                // per ogni elemento presente nella listamacchine
+                // crea un paragrago con i dettagli della macchina
+                // un pagrafo con gli anni della macchina
+                // crea un elemento immagine che ha come src il valore della proprietà url
+                // dell'oggetto macchina
+                for (var i = 0; i < listaMacchine.length; i++) {
+                    var nuovoNodo = document.createElement("p");
+                    var nuovoNodo1 = document.createElement("p");
+                    nuovoNodo.textContent = listaMacchine[i].visualizza(); // Imposta il testo del nuovo elemento
+                    nodo.appendChild(nuovoNodo);
+                    nuovoNodo1.textContent = listaMacchine[i].anni(); // Imposta il testo del nuovo elemento
+                    nodo.appendChild(nuovoNodo1);
+                    var nodoImmagine = document.createElement("img");
+                    nodoImmagine.src = listaMacchine[i].url;
+                    nodo.appendChild(nodoImmagine);
+                }
+            }
+            function removeSelect() {
+                var nodo = document.getElementById("cars");
+
+                while (nodo.firstChild) {
+
+                    nodo.removeChild(nodo.firstChild);
+                }
+            }
+
+            // va a presendere il nome della macchina ottenuta dalla select dinamica
+            // va  a prendere il valore del nuovo anno che vogliamo settare
+            function setYear() {
+
+                var nome = document.getElementById("cars").value;
+                var year = document.getElementById("year1").value;
+                var anni = parseInt(year);
+                // per ogni elemento se esiste una macchina con quel nome
+                // settiamo l'anno invocando il metodo setyear e passandogli
+                // come parametro il nuovo valore da inserire ottenuto dall'input
+                for (var i = 0; i < listaMacchine.length; i++) {
+                    if (listaMacchine[i].name == nome) {
+                        listaMacchine[i].setYear(anni);
+                        alert("Anno settato corretamente");
+                    }
+                }
+
+            }
+        }
+
+
+    </script>
+</head>
+
+<body>
+    <!--
+        Tre input e un bottone per inserire una nuova macchina con tutte le proprietà
+    -->
+    <h3> La mia macchina </h3>
+    Inserisci il nome della macchina <input type="text" id="name"> <br> <br>
+    Inserisci l'anno di immatricolazione <input type="text" id="year"> <br>
+    Inserisci l'url della macchina <input type="text" id="url"> <br>
+    <br>
+    <button id="btn">Invia</button>
+    <br><br>
+    <!--
+    con il bottone visualizza diamo la possibilità di vedere tutte le macchine
+    registrate nella lista
+-->
+    <button id="btn1">Visualizza tutte le macchine</button>
+    <hr>
+    <div id="result"></div>
+    <hr>
+    <div id="result1"></div>
+
+    <hr>
+    <hr>
+    <!--
+    con il bottone setyear andiamo a modificare l'anno di immatricolazione della
+    macchina con il nuovo valore presso dall'input
+-->
+    <select id="cars"></select> <br> <br>
+    Inserisci il nuovo anno di immatricolazione <input type="text" id="year1"> <br>
+    <button id="setYear">Setta anno</button>
+</body>
+
+</html>
