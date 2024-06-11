@@ -1,1 +1,158 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex.Dipendenti</title>
+</head>
+<body>
+    <h3>Dipendente</h3>
+    Inserisci il cognome del dipendente <input type="text" id="cognome"> <br><br>
+    Inserisci la sua mansione <input type="text" id="mansione"> <br><br>
+    Inserisci il suo stipendio <input type="text" id="stipendio"> <br><br>
+    Inserisci l'URL dell'immagine <input type="text" id="url"> <br><br> <!-- inserimento dell'url dell'img, inserita poi dinamicamente con Js-->
+    <button id="btn">Invia</button> <br><br>
+    <button id="btn1">Visualizza tutti i dipendenti</button>
+    <hr>
+    <div id="result"></div>
+    <hr>
+    <h3>Aggiorna Stipendio</h3>
+    Seleziona il cognome del dipendente
+    <select id="selectDipendente"></select> <br><br>
+    Inserisci il nuovo stipendio <input type="text" id="stipendioAggiorna"> <br><br>
+    <button id="btn2">Aggiorna Stipendio</button>
+    <hr>
+    <div id="result1"></div>
+
+    <script>
+            // Funzione che viene eseguita quando la finestra è completamente caricata
+        window.onload = gestoreLoad;
+        function gestoreLoad() {
+             // Associazione delle funzioni ai pulsanti
+            var btn = document.getElementById("btn");
+            btn.onclick = creaDipendente;
+            var btn1 = document.getElementById("btn1");
+            btn1.onclick = visualizzaDipendenti;
+            var btn2 = document.getElementById("btn2");
+            btn2.onclick = aggiornaStipendio;
+
+            class Dipendente {
+                  // Costruttore per creare un nuovo dipendente
+                constructor(cognome, mansione, stipendio, immagine) {
+                    this.cognome = cognome;
+                    this.mansione = mansione;
+                    this.stipendio = stipendio;
+                    this.immagine = immagine; //img
+                }
+                // Metodo per visualizzare i dettagli del dipendente
+                visualizza() {
+                    return "Cognome: " + this.cognome + ", Mansione: " + this.mansione + ", Stipendio: " + this.stipendio;
+                }
+                 // Metodo per aggiungere un bonus allo stipendio
+                bonus() {
+                    this.stipendio += 200;
+                }
+                // Metodo per impostare uno stipendio personalizzato
+                setStipendio(nuovoStipendio) {
+                    this.stipendio = nuovoStipendio;
+                }
+            }
+            // Creazione di un array per contenere i dipendenti
+            var listaDipendenti = new Array();
+            // Creazione di due dipendenti predefiniti
+            var d1 = new Dipendente("Rossi", "Operaio", 1200, "https://via.placeholder.com/100");
+            var d2 = new Dipendente("Verdi", "Developer", 2000, "https://via.placeholder.com/100");
+            // Aggiunta dei dipendenti all'array
+            listaDipendenti.push(d1);
+            listaDipendenti.push(d2);
+                 // Popolazione della lista a discesa dei dipendenti
+            for (var i = 0; i < listaDipendenti.length; i++) {
+                var select = document.getElementById("selectDipendente");
+                var nuovaOpzione = document.createElement("option");
+                nuovaOpzione.value = listaDipendenti[i].cognome;
+                nuovaOpzione.text = listaDipendenti[i].cognome;
+                select.appendChild(nuovaOpzione);
+            }
+             // Funzione per rimuovere i dipendenti visualizzati
+            function remove() {
+                var nodo = document.getElementById("result");
+                while (nodo.firstChild) {
+                    nodo.removeChild(nodo.firstChild);
+                }
+            }
+                 // Funzione per rimuovere i dipendenti visualizzati nella sezione di aggiornamento dello stipendio
+            function remove1() {
+                var nodo = document.getElementById("result1");
+                while (nodo.firstChild) {
+                    nodo.removeChild(nodo.firstChild);
+                }
+            }
+                 // Funzione per creare un nuovo dipendente
+            function creaDipendente() {
+                var cognome = document.getElementById("cognome").value;
+                var mansione = document.getElementById("mansione").value;
+                var stipendio = parseInt(document.getElementById("stipendio").value);
+                var immagine = document.getElementById("url").value; //aggiungo tra le parentesi l'url dell'img 
+
+                var d1 = new Dipendente(cognome, mansione, stipendio, immagine);
+                listaDipendenti.push(d1);
+
+                var nodo = document.getElementById("result");
+                remove();
+                var nuovoNodo = document.createElement("div");
+
+                var immagineNodo = document.createElement("img"); //img
+                immagineNodo.src = d1.immagine;
+                immagineNodo.alt = "Immagine di " + d1.cognome;
+                immagineNodo.style.width = "100px";
+
+                var testoNodo = document.createElement("p");
+                testoNodo.textContent = d1.visualizza();
+
+                nuovoNodo.appendChild(immagineNodo);
+                nuovoNodo.appendChild(testoNodo);
+                nodo.appendChild(nuovoNodo);
+
+                var select = document.getElementById("selectDipendente");
+                var nuovaOpzione = document.createElement("option");
+                nuovaOpzione.value = cognome;
+                nuovaOpzione.text = cognome;
+                select.appendChild(nuovaOpzione);
+            }
+            // Funzione per visualizzare tutti i dipendenti
+            function visualizzaDipendenti() {
+                remove1();
+                var nodo = document.getElementById("result1");
+                for (var i = 0; i < listaDipendenti.length; i++) {
+                    var nuovoNodo = document.createElement("div");
+
+                    var immagineNodo = document.createElement("img"); //visualizzo la img
+                    immagineNodo.src = listaDipendenti[i].immagine;
+                    immagineNodo.alt = "Immagine di " + listaDipendenti[i].cognome;
+                    immagineNodo.style.width = "100px";
+
+                    var testoNodo = document.createElement("p");
+                    testoNodo.textContent = listaDipendenti[i].visualizza();
+
+                    nuovoNodo.appendChild(immagineNodo);
+                    nuovoNodo.appendChild(testoNodo);
+                    nodo.appendChild(nuovoNodo);
+                }
+            }
+            // Funzione per aggiornare lo stipendio di un dipendente
+            function aggiornaStipendio() {
+                var cognome = document.getElementById("selectDipendente").value;
+                var nuovoStipendio = parseInt(document.getElementById("stipendioAggiorna").value);
+                for (var i = 0; i < listaDipendenti.length; i++) {
+                    if (listaDipendenti[i].cognome === cognome) {
+                        listaDipendenti[i].setStipendio(nuovoStipendio);
+                        break;
+                    }
+                }
+                visualizzaDipendenti();
+            }
+        }
+    </script>
+</body>
+</html>
